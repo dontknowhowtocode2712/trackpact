@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>TrackPact</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -36,10 +36,10 @@
           <div class="pin-section">
             <div class="section-label">Enter your 4-digit PIN</div>
             <div class="pin-row">
-              <input class="pin-input" type="password" maxlength="1" id="p1" oninput="movePin(this,'p2')" />
-              <input class="pin-input" type="password" maxlength="1" id="p2" oninput="movePin(this,'p3')" />
-              <input class="pin-input" type="password" maxlength="1" id="p3" oninput="movePin(this,'p4')" />
-              <input class="pin-input" type="password" maxlength="1" id="p4" oninput="checkPin()" />
+              <input class="pin-input" type="password" inputmode="numeric" maxlength="1" id="p1" oninput="movePin(this,'p2')" />
+              <input class="pin-input" type="password" inputmode="numeric" maxlength="1" id="p2" oninput="movePin(this,'p3')" />
+              <input class="pin-input" type="password" inputmode="numeric" maxlength="1" id="p3" oninput="movePin(this,'p4')" />
+              <input class="pin-input" type="password" inputmode="numeric" maxlength="1" id="p4" oninput="checkPin()" />
             </div>
             <div class="pin-error" id="pin-error"></div>
           </div>
@@ -76,54 +76,109 @@
   <div id="screen-tracker" class="screen">
     <div class="topbar">
       <div class="logo">Track<span class="pact">Pact</span></div>
-      <div class="nav-tabs">
+      <div class="nav-tabs desktop-only">
         <button class="nav-tab active" onclick="showPage('tracker')">Daily tracker</button>
         <button class="nav-tab" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab" onclick="showPage('history')">History</button>
         <button class="nav-tab" onclick="showPage('tasklist')">Task list</button>
       </div>
       <div class="topbar-right">
-        <span id="tracker-date" class="topbar-date"></span>
+        <span id="tracker-date" class="topbar-date desktop-only"></span>
         <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
       </div>
     </div>
-
     <div class="datebar">
-      <div class="datebar-label">This week</div>
+      <div class="datebar-label desktop-only">This week</div>
       <div class="day-pills" id="day-pills"></div>
       <div class="date-pill" id="tracker-day-pill"></div>
     </div>
-
     <div class="tracker-columns" id="tracker-columns"></div>
+    <div class="mobile-player-nav" id="mobile-player-nav"></div>
   </div>
 
   <!-- SCREEN 3: LEADERBOARD -->
   <div id="screen-leaderboard" class="screen">
     <div class="topbar">
       <div class="logo">Track<span class="pact">Pact</span></div>
-      <div class="nav-tabs">
+      <div class="nav-tabs desktop-only">
         <button class="nav-tab" onclick="showPage('tracker')">Daily tracker</button>
         <button class="nav-tab active" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab" onclick="showPage('history')">History</button>
         <button class="nav-tab" onclick="showPage('tasklist')">Task list</button>
       </div>
       <div class="topbar-right">
-        <span id="leaderboard-date" class="topbar-date"></span>
+        <span id="leaderboard-date" class="topbar-date desktop-only"></span>
         <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
       </div>
     </div>
     <div class="leaderboard-body" id="leaderboard-body"></div>
   </div>
 
-  <!-- SCREEN 4: TASK LIST -->
+  <!-- SCREEN 4: HISTORY -->
+  <div id="screen-history" class="screen">
+    <div class="topbar">
+      <div class="logo">Track<span class="pact">Pact</span></div>
+      <div class="nav-tabs desktop-only">
+        <button class="nav-tab" onclick="showPage('tracker')">Daily tracker</button>
+        <button class="nav-tab" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab active" onclick="showPage('history')">History</button>
+        <button class="nav-tab" onclick="showPage('tasklist')">Task list</button>
+      </div>
+      <div class="topbar-right">
+        <span id="history-date" class="topbar-date desktop-only"></span>
+        <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
+      </div>
+    </div>
+    <div class="history-view-tabs">
+      <button class="hv-tab active" onclick="showHistoryView('calendar')">&#128197; Calendar</button>
+      <button class="hv-tab" onclick="showHistoryView('week')">&#128200; Week browser</button>
+      <button class="hv-tab" onclick="showHistoryView('month')">&#128336; Monthly</button>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="hv-panel active" id="hv-calendar">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeCalMonth(-1)">&#8592;</button>
+        <div class="cal-month-label" id="cal-month-label"></div>
+        <button class="cal-nav-btn" onclick="changeCalMonth(1)">&#8594;</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-day-detail" id="cal-day-detail"></div>
+    </div>
+
+    <!-- Week Browser -->
+    <div class="hv-panel" id="hv-week">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeWeek(-1)">&#8592;</button>
+        <div class="cal-month-label" id="week-label"></div>
+        <button class="cal-nav-btn" onclick="changeWeek(1)">&#8594;</button>
+      </div>
+      <div class="week-browser-body" id="week-browser-body"></div>
+    </div>
+
+    <!-- Monthly View -->
+    <div class="hv-panel" id="hv-month">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8592;</button>
+        <div class="cal-month-label" id="month-label"></div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8594;</button>
+      </div>
+      <div class="month-body" id="month-body"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: TASK LIST -->
   <div id="screen-tasklist" class="screen">
     <div class="topbar">
       <div class="logo">Track<span class="pact">Pact</span></div>
-      <div class="nav-tabs">
+      <div class="nav-tabs desktop-only">
         <button class="nav-tab" onclick="showPage('tracker')">Daily tracker</button>
         <button class="nav-tab" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab" onclick="showPage('history')">History</button>
         <button class="nav-tab active" onclick="showPage('tasklist')">Task list</button>
       </div>
       <div class="topbar-right">
-        <span id="tasklist-date" class="topbar-date"></span>
+        <span id="tasklist-date" class="topbar-date desktop-only"></span>
         <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
       </div>
     </div>
@@ -131,11 +186,29 @@
       <span>Tasks apply to everyone's daily checklist</span>
       <span class="task-count-badge" id="task-count-badge">10 tasks</span>
     </div>
-    <div class="notice-bar">
-      &#9888; Changes take effect from tomorrow. Today's scores are not affected.
-    </div>
+    <div class="notice-bar">&#9888; Changes take effect from tomorrow. Today's scores are not affected.</div>
     <div class="tasklist-body" id="tasklist-body"></div>
   </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="bottom-nav mobile-only" id="bottom-nav">
+    <button class="bn-btn active" onclick="showPage('tracker')" id="bn-tracker">
+      <div class="bn-icon">&#9989;</div>
+      <div class="bn-label">Tracker</div>
+    </button>
+    <button class="bn-btn" onclick="showPage('leaderboard')" id="bn-leaderboard">
+      <div class="bn-icon">&#127942;</div>
+      <div class="bn-label">Leaderboard</div>
+    </button>
+    <button class="bn-btn" onclick="showPage('history')" id="bn-history">
+      <div class="bn-icon">&#128197;</div>
+      <div class="bn-label">History</div>
+    </button>
+    <button class="bn-btn" onclick="showPage('tasklist')" id="bn-tasklist">
+      <div class="bn-icon">&#128221;</div>
+      <div class="bn-label">Tasks</div>
+    </button>
+  </nav>
 
   <!-- RULES POPUP -->
   <div class="rules-overlay" id="rules-overlay" onclick="closeRulesOutside(event)">
@@ -155,7 +228,6 @@
         <div class="rules-tab" onclick="showRulesTab('faq',this)">FAQ</div>
       </div>
       <div class="rules-body">
-
         <div class="rules-panel active" id="rpanel-scoring">
           <div class="r-block">
             <div class="r-title">&#9989; How tasks are scored</div>
@@ -181,7 +253,6 @@
             <div class="r-row"><div class="r-dot"></div><div class="r-text">If no tasks are logged by midnight GST, that day is automatically scored <b>0 points.</b></div></div>
           </div>
         </div>
-
         <div class="rules-panel" id="rpanel-weekly">
           <div class="r-block">
             <div class="r-title">&#128200; Weekly points &amp; percentage</div>
@@ -207,7 +278,6 @@
             <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>3-way tie:</b> net zero — everyone gets their 10 AED back.</div></div>
           </div>
         </div>
-
         <div class="rules-panel" id="rpanel-betting">
           <div class="r-block">
             <div class="r-title">&#128176; The weekly bet</div>
@@ -227,7 +297,6 @@
             <div class="r-row"><div class="r-dot"></div><div class="r-text">New players start at <b>0 AED.</b> Pot adjusts to active player count.</div></div>
           </div>
         </div>
-
         <div class="rules-panel" id="rpanel-integrity">
           <div class="r-block">
             <div class="r-title">&#128221; The pledge</div>
@@ -248,7 +317,6 @@
             <div class="r-row"><div class="r-dot"></div><div class="r-text">Any correction should be <b>agreed by all players</b> before being made.</div></div>
           </div>
         </div>
-
         <div class="rules-panel" id="rpanel-faq">
           <div class="faq-item">
             <div class="faq-q"><span class="q-badge">Q</span>What if I forget to log on Monday?</div>
@@ -279,12 +347,10 @@
             <div class="faq-a">Pick your name and enter your <b>4-digit PIN.</b> Your PIN verifies your identity.</div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="app.js"></script>
