@@ -1,1 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrackPact</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
+  <!-- SCREEN 1: INTEGRITY GATE -->
+  <div id="screen-gate" class="screen active">
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="gate-header">
+          <div class="logo">Track<span class="pact">Pact</span></div>
+          <div class="gate-sub">Before you enter, you must commit to the pact</div>
+        </div>
+        <div class="gate-body">
+          <div class="section-label">Who are you?</div>
+          <div class="name-row" id="name-row">
+            <div class="name-btn" data-name="Arun" onclick="selectName(this)">
+              <div class="av av-a">AR</div>
+              <div class="nm">Arun</div>
+            </div>
+            <div class="name-btn" data-name="Shivik" onclick="selectName(this)">
+              <div class="av av-s">SH</div>
+              <div class="nm">Shivik</div>
+            </div>
+            <div class="name-btn" data-name="Krutik" onclick="selectName(this)">
+              <div class="av av-k">KR</div>
+              <div class="nm">Krutik</div>
+            </div>
+          </div>
+
+          <div class="pin-section">
+            <div class="section-label">Enter your 4-digit PIN</div>
+            <div class="pin-row">
+              <input class="pin-input" type="password" maxlength="1" id="p1" oninput="movePin(this,'p2')" />
+              <input class="pin-input" type="password" maxlength="1" id="p2" oninput="movePin(this,'p3')" />
+              <input class="pin-input" type="password" maxlength="1" id="p3" oninput="movePin(this,'p4')" />
+              <input class="pin-input" type="password" maxlength="1" id="p4" oninput="checkPin()" />
+            </div>
+            <div class="pin-error" id="pin-error"></div>
+          </div>
+
+          <div class="section-label">The TrackPact Integrity Pledge</div>
+          <div class="pact-box">
+            <div class="pact-title">&#128221; Code of Honour</div>
+            <div class="pact-text">
+              I, <strong id="pledge-name">...</strong>, solemnly commit to logging my daily tasks with <strong>complete and total honesty</strong>.<br><br>
+              I will only mark a task as complete if I have <strong>genuinely and fully completed it</strong>. I will not backdate, falsify, or manipulate any entry for personal gain.<br><br>
+              I understand that this pact is built on <strong>trust between all participants</strong>, and that any breach of this agreement undermines the integrity of the entire group.
+            </div>
+          </div>
+
+          <div class="penalty-box">
+            <div class="penalty-label">&#9888; Penalty Clause</div>
+            <div class="penalty-text">
+              Any participant found to have acted dishonestly is subject to a <strong>penalty as collectively decided by the other participants</strong>, deemed appropriate to the nature of the violation. This penalty is final and binding upon group consensus.
+            </div>
+          </div>
+
+          <div class="check-row" id="check-row" onclick="toggleCheck()">
+            <div class="checkbox" id="checkbox"></div>
+            <div class="check-label"><strong>I have read, understood, and agree</strong> to the TrackPact Integrity Pledge and accept the penalty clause in full.</div>
+          </div>
+
+          <button class="enter-btn" id="enter-btn" onclick="enterApp()">&#128274; Select your name and agree to continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: DAILY TRACKER -->
+  <div id="screen-tracker" class="screen">
+    <div class="topbar">
+      <div class="logo">Track<span class="pact">Pact</span></div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showPage('tracker')">Daily tracker</button>
+        <button class="nav-tab" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab" onclick="showPage('tasklist')">Task list</button>
+      </div>
+      <div class="topbar-right">
+        <span id="tracker-date" class="topbar-date"></span>
+        <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
+      </div>
+    </div>
+
+    <div class="datebar">
+      <div class="datebar-label">This week</div>
+      <div class="day-pills" id="day-pills"></div>
+      <div class="date-pill" id="tracker-day-pill"></div>
+    </div>
+
+    <div class="tracker-columns" id="tracker-columns"></div>
+  </div>
+
+  <!-- SCREEN 3: LEADERBOARD -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="topbar">
+      <div class="logo">Track<span class="pact">Pact</span></div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="showPage('tracker')">Daily tracker</button>
+        <button class="nav-tab active" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab" onclick="showPage('tasklist')">Task list</button>
+      </div>
+      <div class="topbar-right">
+        <span id="leaderboard-date" class="topbar-date"></span>
+        <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
+      </div>
+    </div>
+    <div class="leaderboard-body" id="leaderboard-body"></div>
+  </div>
+
+  <!-- SCREEN 4: TASK LIST -->
+  <div id="screen-tasklist" class="screen">
+    <div class="topbar">
+      <div class="logo">Track<span class="pact">Pact</span></div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="showPage('tracker')">Daily tracker</button>
+        <button class="nav-tab" onclick="showPage('leaderboard')">Leaderboard</button>
+        <button class="nav-tab active" onclick="showPage('tasklist')">Task list</button>
+      </div>
+      <div class="topbar-right">
+        <span id="tasklist-date" class="topbar-date"></span>
+        <button class="rules-btn" onclick="openRules()">&#9432; Rules</button>
+      </div>
+    </div>
+    <div class="infobar">
+      <span>Tasks apply to everyone's daily checklist</span>
+      <span class="task-count-badge" id="task-count-badge">10 tasks</span>
+    </div>
+    <div class="notice-bar">
+      &#9888; Changes take effect from tomorrow. Today's scores are not affected.
+    </div>
+    <div class="tasklist-body" id="tasklist-body"></div>
+  </div>
+
+  <!-- RULES POPUP -->
+  <div class="rules-overlay" id="rules-overlay" onclick="closeRulesOutside(event)">
+    <div class="rules-popup">
+      <div class="rules-header">
+        <div>
+          <div class="logo">Track<span class="pact">Pact</span> — Official Rules</div>
+          <div class="rules-sub">Tap any section to read the rules</div>
+        </div>
+        <button class="rules-close" onclick="closeRules()">✕</button>
+      </div>
+      <div class="rules-tabs">
+        <div class="rules-tab active" onclick="showRulesTab('scoring',this)">Scoring</div>
+        <div class="rules-tab" onclick="showRulesTab('weekly',this)">Weekly</div>
+        <div class="rules-tab" onclick="showRulesTab('betting',this)">Betting</div>
+        <div class="rules-tab" onclick="showRulesTab('integrity',this)">Integrity</div>
+        <div class="rules-tab" onclick="showRulesTab('faq',this)">FAQ</div>
+      </div>
+      <div class="rules-body">
+
+        <div class="rules-panel active" id="rpanel-scoring">
+          <div class="r-block">
+            <div class="r-title">&#9989; How tasks are scored</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">There are <b>10 tasks per day</b> across 4 categories: Fitness, Work, Habits, Good for Life.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Each task completed = <b>1 point.</b> Each task missed = <b>0 points.</b> Maximum 10 points per day.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Tasks apply <b>every day</b> including Saturday and Sunday.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Your daily score = points earned ÷ 10 × 100. Example: 7 tasks = 7 pts = 70%.</div></div>
+            <div class="tick-legend">
+              <div class="tick-item"><div class="tick-g">✓</div><span>Completed</span></div>
+              <div class="tick-item"><div class="tick-r">✕</div><span>Missed / locked</span></div>
+              <div class="tick-item"><div class="tick-e"></div><span>Not yet logged</span></div>
+            </div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#127775; Score colour logic</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>Your own score:</b> green if above 50%, red if at 50% or below.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>Other players' scores</b> are always shown in blue.</div></div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#128274; Day locking</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Each day locks at <b>midnight GST.</b></div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">You have a <b>24-hour grace window</b> to log the previous day. After 24 hours it is permanently locked.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">If no tasks are logged by midnight GST, that day is automatically scored <b>0 points.</b></div></div>
+          </div>
+        </div>
+
+        <div class="rules-panel" id="rpanel-weekly">
+          <div class="r-block">
+            <div class="r-title">&#128200; Weekly points &amp; percentage</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>Weekly points</b> = sum of all daily points Mon–Sun. Maximum 70 points.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>Weekly % = Points earned ÷ (Days played × 10) × 100</b></div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Future days are excluded — on Wednesday your % is out of 30, not 70.</div></div>
+            <div class="r-eg">
+              <div class="eg-title">Example — Thursday (4 days played)</div>
+              <div class="eg-row"><span>Mon 9 + Tue 7 + Wed 10 + Thu 8</span><span>= 34 pts</span></div>
+              <div class="eg-row"><span>Max possible (4 × 10)</span><span>= 40 pts</span></div>
+              <div class="eg-row"><span>Weekly %</span><span class="green">85%</span></div>
+            </div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#127942; Winner declaration</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Winner = highest weekly points at <b>midnight Sunday GST.</b></div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Declared on <b>Monday morning</b> when the app is opened.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Leaderboard resets every Monday for the new week.</div></div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#9878; Tie-breaking</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>2-way tie:</b> pot split — each tied player +5 AED, third player −10 AED.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>3-way tie:</b> net zero — everyone gets their 10 AED back.</div></div>
+          </div>
+        </div>
+
+        <div class="rules-panel" id="rpanel-betting">
+          <div class="r-block">
+            <div class="r-title">&#128176; The weekly bet</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Every player stakes <b>10 AED per week.</b> Total pot = <b>30 AED.</b></div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>No money changes hands weekly.</b> A running P/L tally is kept all year.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Final settlement happens <b>once at end of year.</b></div></div>
+            <div class="payout-grid">
+              <div class="payout-card win"><div class="pc-label">Winner</div><div class="pc-amt">+20 AED</div><div class="pc-sub">10 returned + 20 won</div></div>
+              <div class="payout-card lose"><div class="pc-label">2nd &amp; 3rd</div><div class="pc-amt loss">−10 AED</div><div class="pc-sub">Stake lost</div></div>
+              <div class="payout-card draw"><div class="pc-label">Full tie</div><div class="pc-amt draw">0 AED</div><div class="pc-sub">Everyone returns even</div></div>
+            </div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#128197; Season P/L</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Each player's running P/L shown in <b>green (profit)</b> or <b>red (loss)</b> on the leaderboard.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">A <b>week-by-week history log</b> shows every winner and payout since week 1.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">New players start at <b>0 AED.</b> Pot adjusts to active player count.</div></div>
+          </div>
+        </div>
+
+        <div class="rules-panel" id="rpanel-integrity">
+          <div class="r-block">
+            <div class="r-title">&#128221; The pledge</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Every player must sign the Integrity Pledge and set a <b>4-digit PIN</b> before first access.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Only mark a task complete if you have <b>genuinely and fully completed it.</b></div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text"><b>Do not share your PIN</b> with other players.</div></div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#128683; What counts as a breach</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Marking a task complete when it was not genuinely done.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Using the 24-hour window to falsify past entries.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Attempting to access another player's account.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Penalty decided <b>collectively by the other players</b> — final and binding.</div></div>
+          </div>
+          <div class="r-block">
+            <div class="r-title">&#9881; Admin</div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Admin can correct <b>task completions only.</b> No direct score overrides.</div></div>
+            <div class="r-row"><div class="r-dot"></div><div class="r-text">Any correction should be <b>agreed by all players</b> before being made.</div></div>
+          </div>
+        </div>
+
+        <div class="rules-panel" id="rpanel-faq">
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>What if I forget to log on Monday?</div>
+            <div class="faq-a">You have until <b>midnight Tuesday GST</b> to go back and log Monday. After that it's locked at 0.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>What counts as completing a task?</div>
+            <div class="faq-a">You must have <b>genuinely and fully completed</b> it. Partial completion does not count.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>Can I check tasks in advance?</div>
+            <div class="faq-a"><b>No.</b> You can only log today or yesterday within the 24-hour window.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>What if a task is added mid-week?</div>
+            <div class="faq-a">New tasks take effect <b>from the next day only.</b> Today's scores are unaffected.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>I'm leading — am I guaranteed to win?</div>
+            <div class="faq-a"><b>No.</b> The winner is only decided at <b>midnight Sunday GST.</b> Anyone can overtake you.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>When does money get paid?</div>
+            <div class="faq-a">No money changes hands weekly. <b>One final settlement at end of year</b> based on season P/L.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="q-badge">Q</span>What if I open the app on a new device?</div>
+            <div class="faq-a">Pick your name and enter your <b>4-digit PIN.</b> Your PIN verifies your identity.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
